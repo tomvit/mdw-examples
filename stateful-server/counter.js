@@ -1,5 +1,5 @@
 /**
- * simple session management and example in NodeJS
+ * Example of a counter implemented using a stateful server in Node.js
  * Created for MDW CTU Course, 2011 
  * 
  * @author
