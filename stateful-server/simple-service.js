@@ -1,5 +1,8 @@
 /**
- * simple service in NodeJS
+ * Simple service for Node.JS.
+ * stateful server implementing a simple public process
+ * for opening, adding and closing order
+ * 
  * Created for MDW CTU Course, 2011 
  * 
  * @author
@@ -64,4 +67,4 @@ http.createServer(function(req, res) {
         res.end(result.response);
     }
     
-}).listen(9900, '0.0.0.0');
+}).listen(process.env.C9_PORT, '0.0.0.0');
