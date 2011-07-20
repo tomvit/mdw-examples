@@ -1,3 +1,13 @@
+/**
+ * simple service in NodeJS
+ * Created for MDW CTU Course, 2011 
+ * 
+ * @author
+ * Tomas Vitvar, http://vitvar.com
+ * 
+ * @License
+ * MIT License
+ */
 
 var http = require("http");
 var sessions = require("./sessions.js").sessions;
