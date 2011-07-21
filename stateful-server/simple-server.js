@@ -28,5 +28,5 @@ var server = net.createServer(function (stream) {
             if (message.match("^bye$")) stream.end("Goodbye!\r\n");
                 else stream.write("Do not understand: " + message + "\r\n");    
     });
-}).listen(9900, '0.0.0.0');                
+}).listen(process.env.C9_PORT, '0.0.0.0');                
 
