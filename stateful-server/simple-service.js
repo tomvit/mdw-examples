@@ -15,7 +15,7 @@
 var http = require("http");
 var sessions = require("./sessions.js").sessions;
 
-function process(op, params, session) {
+function processOrder(op, params, session) {
     var response = "", error;
     if (op == "open")
         if (session.data.open)
@@ -50,7 +50,7 @@ http.createServer(function(req, res) {
 
     // get the operation name and process it
     if ((o = req.url.match("^.*/(open|add|close)(.*)$")))
-        result = process(o[1], o[2], session);
+        result = processOrder(o[1], o[2], session);
     else
         result = { error : "Not a valid operation!\n" };
 

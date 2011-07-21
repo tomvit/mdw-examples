@@ -28,4 +28,4 @@ http.createServer(function(req, res) {
     res.writeHead(200, session.header);
     res.end("Number of hits from you: " + session.data.counter + "\n");
     
-}).listen(9900, "0.0.0.0");
+}).listen(process.env.C9_PORT, "0.0.0.0");
