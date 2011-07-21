@@ -2,6 +2,7 @@
  * Simple service for Node.JS.
  * stateful server implementing a simple public process
  * for opening, adding and closing order
+
  * 
  * Created for MDW CTU Course, 2011 
  * 
