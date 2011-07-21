@@ -1,5 +1,7 @@
 /**
  * simple session management object
+ * Uses Set-Cookie and Cookie HTTP Headers to maintain session at the server
+ * 
  * Created for MDW CTU Course, 2011 
  * 
  * @author
