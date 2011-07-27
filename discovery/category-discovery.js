@@ -1,3 +1,35 @@
+/**
+ * Example of a service discovery that operates on services' categories
+ * Created for MDW CTU Course, 2011 
+ * 
+ * @author
+ * Tomas Vitvar, http://vitvar.com
+ * 
+ * @License
+ * MIT License
+ */
+
+// Following declarations are for clarifications only;
+// There is no checking in JavaScript that objects will conform to these classes
+// Interface for the element in the service taxonomy
+var taxonomy_element = {
+    // name of the category that this element represents in the taxonomy
+    category_name : null,
+
+    // array of taxonomy_element objects; 
+    // is empty if no sub-categories exist
+    categories : []
+};
+
+// interface for the element in the service directory
+var service_description = {
+    // name (String) of the category
+    category_name : null, 
+    
+    // textual description
+    description : ""
+};
+
 // returns a taxonomy element that matches category_name
 function findTaxonomyElement(category_name, taxonomy_element) {
     // check if this is the element
