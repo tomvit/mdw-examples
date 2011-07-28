@@ -13,7 +13,8 @@
 // There is no checking in JavaScript that objects will conform to these classes
 // Interface for the element in the service taxonomy
 var taxonomy_element = {
-    // name of the category that this element represents in the taxonomy
+    // name of the category that 
+    // this element represents in the taxonomy
     category_name : null,
 
     // array of taxonomy_element objects; 
