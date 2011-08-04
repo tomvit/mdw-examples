@@ -35,6 +35,7 @@ var storage = {
 };
 
 function processRequest(uri, method, data) {
+    // orders resource
     if (uri == "/orders") {
         if (method == "POST") { // open order       
             // create a new order object
@@ -64,6 +65,7 @@ function processRequest(uri, method, data) {
             };
     }
     
+    // orders/{order-id} resource
     if ((id = uri.match("^/orders/([0-9]+)$"))) {
         if (method == "POST") {
             // get the order object
@@ -85,27 +87,50 @@ function processRequest(uri, method, data) {
                 return { status : (order ? "204" : "400") }; 
         }
         
-        // update the order status
-        if (method == "PUT") {
-            // get the order object
-            var order = storage.getOrder(id);
-            if (order && order.status == "open") {
-                var o2 = JSON.parse(data);
-                
-                // check for the valid status 
-                if (o2.status && (s = o2.status.match("(close|cancel)"))) {
-                    order.status = s;
-                    return { 
-                        status : "204", // no content 
-                    };                     
+        else        
+            // update the order status
+            if (method == "PUT") {
+                // get the order object
+                var order = storage.getOrder(id);
+                if (order && order.status == "open") {
+                    var o2 = JSON.parse(data);
+                    
+                    // check for the valid status 
+                    if (o2.status && (s = o2.status.match("(close)"))) {
+                        order.status = s;
+                        return { 
+                            status : "204", // no content 
+                        };                     
+                    } else
+                        // bad request
+                        return { status : "400" };
                 } else
-                    // bad request
-                    return { status : "400" };
-            } else
-                // not found or bad request (the order is not open)
-                return { status : (order ? "204" : "400") }; 
-        }
+                    // not found or bad request (the order is not open)
+                    return { status : (order ? "204" : "400") }; 
+            }
+            
+        else
+            // get the order
+            if (method == "GET") {
+                // TODO
+            }
+            
+        else
+            // delete the order
+            if (method == "DELETE") {
+                // TODO
+            }
         
+        else            
+            return { 
+                status: "405", // method not allowed 
+                headers : { "Allow" : "GET, PUT, POST, DELETE" } 
+            };
+    }
+    
+    // orders/{order-id}/{item-id} resource
+    if ((id = uri.match("^/orders/([0-9]+)/([0-9]+)$"))) {
+        // TODO
     }
     
 }
