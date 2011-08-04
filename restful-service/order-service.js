@@ -69,18 +69,14 @@ function processRequest(uri, method, data) {
             // get the order object
             var order = storage.getOrder(id);
             if (order) {                
-                // check if the order is open
                 if (order.status == "open") {                
-                    // get the item object from the request data
+                    // get the item object from the request data and set it's id
                     var item = JSON.parse(data);
-                    
-                    // set the item's id; this will ignore any id set by the client
                     item.id = storage.getItemSeqId(order);
                     
-                    // store the item in the order
+                    // store the item in the order and return the result
+                    // location is the URI of the newly created item
                     order.items.push(item);
-                    
-                    // return the result; location is the URI of the newly created item
                     return { 
                         status : "204", // created 
                         headers : { location: "/orders/" + order.id + "/" + item.id }                     
