@@ -68,23 +68,21 @@ function processRequest(uri, method, data) {
         if (method == "POST") {
             // get the order object
             var order = storage.getOrder(id);
-            if (order) {                
-                if (order.status == "open") {                
-                    // get the item object from the request data and set it's id
-                    var item = JSON.parse(data);
-                    item.id = storage.getItemSeqId(order);
-                    
-                    // store the item in the order and return the result
-                    // location is the URI of the newly created item
-                    order.items.push(item);
-                    return { 
-                        status : "204", // created 
-                        headers : { location: "/orders/" + order.id + "/" + item.id }                     
-                    };                
-                } else
-                    return { status : "400" }; // bad request -> the order is not open
+            if (order && order.status == "open") {                
+                // get the item object from the request data and set it's id
+                var item = JSON.parse(data);
+                item.id = storage.getItemSeqId(order);
+                
+                // store the item in the order and return the result
+                // location is the URI of the newly created item
+                order.items.push(item);
+                return { 
+                    status : "204", // created 
+                    headers : { location: "/orders/" + order.id + "/" + item.id }                     
+                };                
             } else
-                return { status : "404" }; // order with specified id was not found
+                // not found or bad request (the order is not open)
+                return { status : (order ? "204" : "400") }; 
         }
     }
     
