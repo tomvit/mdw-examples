@@ -84,6 +84,28 @@ function processRequest(uri, method, data) {
                 // not found or bad request (the order is not open)
                 return { status : (order ? "204" : "400") }; 
         }
+        
+        // update the order status
+        if (method == "PUT") {
+            // get the order object
+            var order = storage.getOrder(id);
+            if (order && order.status == "open") {
+                var o2 = JSON.parse(data);
+                
+                // check for the valid status 
+                if (o2.status && (s = o2.status.match("(close|cancel)"))) {
+                    order.status = s;
+                    return { 
+                        status : "204", // no content 
+                    };                     
+                } else
+                    // bad request
+                    return { status : "400" };
+            } else
+                // not found or bad request (the order is not open)
+                return { status : (order ? "204" : "400") }; 
+        }
+        
     }
     
 }
