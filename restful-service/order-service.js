@@ -15,20 +15,31 @@ var http = require("http");
 
 // a storage to store the orders
 // this should normally be persistent
-var storage = { orders : [] };
+var storage = { 
+    orders : [], // list of all order in the storage
+    
+    // returns the next available id for the order
+    getOrderSeqId : function() {
+        return this.orders.length > 0 ?
+            this.orders[this.orders.length - 1].id + 1 : 1;    
+    },
+    
+    // returns an order object based on id
+    getOrder : function(id) {
+        for (var i = 0; i < this.order.length; i++)
+            if (this.orders[i] == id)
+                return this.orders[i];
+        return null;
+    }
 
-// returns the next order id
-function getOrderSeqId() {
-    return storage.orders.length > 0 ?
-        storage.orders[storage.orders.length - 1].id + 1 : 1;
-}
+};
 
 function processRequest(uri, method, data) {
     if (uri == "/orders") {
         if (method == "POST") { // open order       
             // create a new order object
             var order = {   
-                id : getOrderSeqId(), 
+                id : storage.getOrderSeqId(), 
                 status : "open", 
                 items : [] 
             };
@@ -37,7 +48,6 @@ function processRequest(uri, method, data) {
             storage.orders.push(order);
             return { 
                 status : "204", // created 
-                data : JSON.stringify(order),
                 headers : { location: "/orders/" + order.id } 
             };
         }
@@ -53,6 +63,35 @@ function processRequest(uri, method, data) {
                 headers : { "Allow" : "GET, POST" } 
             };
     }
+    
+    if ((id = uri.match("^/orders/([0-9]+)$"))) {
+        if (method == "POST") {
+            // get the order object
+            var order = storage.getOrder(id);
+            if (order) {                
+                // check if the order is open
+                if (order.status == "open") {                
+                    // get the item object from the request data
+                    var item = JSON.parse(data);
+                    
+                    // set the item's id; this will ignore any id set by the client
+                    item.id = storage.getItemSeqId(order);
+                    
+                    // store the item in the order
+                    order.items.push(item);
+                    
+                    // return the result; location is the URI of the newly created item
+                    return { 
+                        status : "204", // created 
+                        headers : { location: "/orders/" + order.id + "/" + item.id }                     
+                    };                
+                } else
+                    return { status : "400" }; // bad request -> the order is not open
+            } else
+                return { status : "404" }; // order with specified id was not found
+        }
+    }
+    
 }
 
 http.createServer(function(req, res) {
