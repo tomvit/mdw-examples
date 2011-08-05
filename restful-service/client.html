@@ -1,0 +1,97 @@
+<html>
+    <title>Testing Order Service</title>
+    <body>
+        <script type="text/javascript">
+            var base_url = "";
+            var order_uri = null;
+        
+            function displayMessage(msg) {
+                alert(msg);
+            }
+        
+            function openOrder() {
+                if (order_uri == null) {
+                    var xhr = new XMLHttpRequest();                
+                    xhr.open("POST", base_url + "/orders", true);
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 201) {
+                            order_uri = this.getResponseHeader("Location");
+                            displayMessage("Order created! The order URI is " + order_uri);
+                        }
+                    }
+                    xhr.send();            
+                } else
+                    displayMessage("The order has already been created!");
+            }
+
+            function closeOrder() {
+                if (order_uri !== null) {
+                    var xhr = new XMLHttpRequest();                
+                    xhr.open("PUT", order_uri, true);
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 204) {
+                            displayMessage("Order was closed!");
+                        }
+                    }
+                    xhr.send("{ \"status\" : \"close\" }");            
+                } else
+                    displayMessage("The order has not been opened, open it first!");
+            }
+
+            function addItem() {
+                if (order_uri !== null) {
+                    var xhr = new XMLHttpRequest();                
+                    xhr.open("POST", order_uri, true);
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState == 4) 
+                            if (this.status == 201)
+                                displayMessage("Item added! The item URI is " + this.getResponseHeader("Location"));
+                            else 
+                                displayMessage("Cannot add item to the order, it was closed!");
+                            
+                    }
+                    xhr.send("{ \"name\" : \"" + document.getElementById("input_name").value + "\", " + 
+                               "\"price\" : \"" + document.getElementById("input_price").value + "\"  }");            
+                } else
+                    displayMessage("The order has not been opened, open it first!");
+            }
+
+            function printOrder() {
+                if (order_uri !== null) {
+                    var xhr = new XMLHttpRequest();                
+                    xhr.open("GET", order_uri, true);
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var order = JSON.parse(this.responseText);
+                            var d = document.getElementById("display");
+                            d.innerHTML = "order status: " + order.status + "<br/>";
+                            for (var i = 0; i < order.items.length; i++)
+                                d.innerHTML += "name: " + order.items[i].name + ", price: " + order.items[i].price + "<br/>";
+                        }
+                    }
+                    xhr.send();            
+                } else
+                    displayMessage("The order has not been opened, open it first!");
+            }
+
+        </script>
+        
+        <center>
+            <div>
+                <center>
+                <div style="margin-bottom: 10px">
+                    <input type="button" value="Open" onclick="openOrder();"></input>&nbsp;
+                    <input type="button" value="Close" onclick="closeOrder();"></input>&nbsp;
+                    <input type="button" value="Print" onclick="printOrder();"></input>&nbsp;
+                </div>
+                </center>
+                Name: <input type="text" value="" id="input_name"></input>&nbsp;    
+                Price: <input type="text" value="" id="input_price"></input>&nbsp;
+                <input type="button" value="Add" onclick="addItem();"></input>  
+                <div id="display"></div>
+            </div>  
+        </center>
+
+
+    </body>
+</html>

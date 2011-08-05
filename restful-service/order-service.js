@@ -149,24 +149,37 @@ function processRequest(host, uri, method, data) {
 }
 
 http.createServer(function(req, res) {
-    
-    // initi the body to get the data asynchronously
-    req.body = "";
-    
-    // get the data of the body
-    req.on('data', function (chunk) {
-        req.body += chunk;
-    });
 
-    req.on('end', function () {
-        // process the request
-        var result = processRequest(req.headers.host, 
-            req.url, req.method, req.body);
+    // the client to test the service from the browser
+    if (req.url == "/client.html" && req.method == "GET") {
+        var fs = require("fs");
+        var buffer = fs.readFileSync(process.cwd() + "/restful-service/client.html", 'utf-8');
+        res.writeHead(200, { "Content-Type" : "text/html" });
+        res.end(buffer.toString('utf-8'));
+    }
+
+    if (req.url.match("/orders.*")) {
+        // initi the body to get the data asynchronously
+        req.body = "";
         
-        // send back the result
-        res.writeHead(result.status ? result.status : "200", 
-            result.headers ? result.headers : {});
-        res.end(result.data ? result.data : null);
-    });
+        // get the data of the body
+        req.on('data', function (chunk) {
+            req.body += chunk;
+        });
+    
+        req.on('end', function () {
+            // process the request
+            var result = processRequest(req.headers.host, 
+                req.url, req.method, req.body);
+            
+            // send back the result
+            res.writeHead(result.status ? result.status : "200", 
+                result.headers ? result.headers : {});
+            res.end(result.data ? result.data : null);
+        });
+    } else {
+        res.writeHead(404);
+        res.end();
+    }
     
 }).listen(process.env.C9_PORT, '0.0.0.0');
