@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # set your server address here
-SERVER_URL="http://ec2.vitvar.com:9900"
+SERVER_URL="http://mdw-examples.tomvit.cloud9ide.com"
 
 # add an order and get the new location; assume everything went ok
 order_uri=$SERVER_URL$(curl -v -X POST $SERVER_URL/orders 2>&1 | awk '/location/ {print $3}')
