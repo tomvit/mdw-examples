@@ -85,7 +85,8 @@ function processRequest(host, uri, method, data) {
                 order.items.push(item);
                 return { 
                     status : "201", // created 
-                    headers : { Location: "http://" + host + "/orders/" + order.id + "/" + item.id }                     
+                    headers : { Location: "http://" + host + "/orders/" + 
+                        order.id + "/" + item.id }                     
                 };                
             } else
                 // not found or bad request (the order is not open)
