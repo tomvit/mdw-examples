@@ -4,7 +4,7 @@
 SERVER_URL="http://mdw-examples.tomvit.cloud9ide.com"
 
 # add an order and get the new location; assume everything went ok
-order_uri=$SERVER_URL$(curl -v -X POST $SERVER_URL/orders 2>&1 | \
+order_uri=$(curl -v -X POST $SERVER_URL/orders 2>&1 | \
 	awk '/Location/ {print $3}')
 
 # remove whitespace
