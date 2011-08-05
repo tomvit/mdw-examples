@@ -39,7 +39,7 @@ var storage = {
 
 };
 
-function processRequest(uri, method, data) {
+function processRequest(host, uri, method, data) {
     // orders resource
     if (uri == "/orders") {
         if (method == "POST") { // open order       
@@ -54,7 +54,7 @@ function processRequest(uri, method, data) {
             storage.orders.push(order);
             return { 
                 status : "201", // created 
-                headers : { location: "/orders/" + order.id } 
+                headers : { Location: "http://" + host + "/orders/" + order.id } 
             };
         }
         
@@ -85,7 +85,7 @@ function processRequest(uri, method, data) {
                 order.items.push(item);
                 return { 
                     status : "201", // created 
-                    headers : { location: "/orders/" + order.id + "/" + item.id }                     
+                    headers : { Location: "http://" + host + "/orders/" + order.id + "/" + item.id }                     
                 };                
             } else
                 // not found or bad request (the order is not open)
@@ -159,7 +159,8 @@ http.createServer(function(req, res) {
 
     req.on('end', function () {
         // process the request
-        var result = processRequest(req.url, req.method, req.body);
+        var result = processRequest(req.headers.host, 
+            req.url, req.method, req.body);
         
         // send back the result
         res.writeHead(result.status ? result.status : "200", 
