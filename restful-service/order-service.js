@@ -149,8 +149,10 @@ function processRequest(host, uri, method, data) {
 }
 
 http.createServer(function(req, res) {
-
-    // the client to test the service from the browser
+    // the client to test the service from the browser; the client is an AJAX
+    // app that access our service through JavaScript. We need to supply it
+    // through order-service.js so that they both share the same domain; 
+    // this is necessary to avoid cross-site scripting issues
     if (req.url == "/client.html" && req.method == "GET") {
         var fs = require("fs");
         var buffer = fs.readFileSync(process.cwd() + "/restful-service/client.html", 'utf-8');
@@ -158,6 +160,7 @@ http.createServer(function(req, res) {
         res.end(buffer.toString('utf-8'));
     }
 
+    // check if the request is to deal with orders
     if (req.url.match("/orders.*")) {
         // initi the body to get the data asynchronously
         req.body = "";
