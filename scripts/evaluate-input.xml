@@ -1,0 +1,8 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    	<soap:Body>
+        	<ns1:evaluateRequest xmlns:ns1="http://xmlns.oracle.com/mdw_examples/Evaluate/evaluate">
+            			<ns1:x>4</ns1:x>
+            			<ns1:y>5</ns1:y>
+        	</ns1:evaluateRequest>
+    </soap:Body>
+</soap:Envelope>
